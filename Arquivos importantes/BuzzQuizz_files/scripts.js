@@ -3,9 +3,9 @@ let urlImagem = "";
 let qntdPerguntas = 0;
 let qntdNiveis = 0;
 
-GeraTela1();
+// GeraTela1();
 const tela = document.querySelector(".tela");
-// GeraTela2(1);
+GeraTela2(1);
 
 
 function GeraTela1 () {
@@ -73,6 +73,7 @@ function GeraTela2(id){
 function geraTudo2(resposta){
     geraBanner(resposta.data.image,resposta.data.title);
     geraPerguntas(resposta.data.questions);
+    geraGabarito(resposta.data.questions);
 
 }
 
@@ -95,7 +96,7 @@ function geraPerguntas(perguntas) {
 
     tela.innerHTML += ` 
     
-    <div class="containerPerguntas naoFoi" >
+    <div class="containerPerguntas" >
     <h1  style="background-color:${perguntas[i].color}">> ${perguntas[i].title}</h1>
     <span class="id none">${i} </span> 
     <ul class="todasOpcoes"></ul>
@@ -121,10 +122,15 @@ function geraPerguntas(perguntas) {
     }
     
   }
+  console.log(perguntas);
 }
 
 function comparador() { 
 	return Math.random() - 0.5; 
+}
+
+function mensagemSucesso(){
+    console.log("sucesso");
 }
 
 // Interação pos clique
@@ -132,49 +138,24 @@ let respostas, elementoEscolhido,perguntaDaVez;
 function confereResposta(elemento){
 
     
-  
-    perguntaDaVez = elemento.parentNode.parentNode;
-    perguntaDaVez.classList.remove("naoFoi");
-
-     if (perguntaDaVez.querySelector(".selecionado")){
-        console.log("ja foi escolhido");
+    if (elementoEscolhido){
+        console.log("ja escolheu");
         return;
-     }
+    }
+    perguntaDaVez = elemento.parentNode.parentNode;
+    // if (elemento.parentNode)
     selecionado(elemento);
-    setTimeout(scrollar,2000);
-     
+  
    
 }
-let verificandoResposta, acertos=0;
+
 function selecionado(elemento){
     respostas = elemento.parentNode.querySelectorAll("li");
-    
-
     for (let i=0;i<respostas.length;i++){
         respostas[i].classList.add("naoSelecionado");
-        if (respostas[i].querySelector("span").innerHTML == "true"){
-            respostas[i].classList.add("respostaCerta");
-        } else {
-            respostas[i].classList.add("respostaErrada");
-        }
     }
     elemento.classList.remove("naoSelecionado");
-    elemento.classList.add("selecionado");
     elementoEscolhido = elemento;
-
-    if (elemento.classList.contains("respostaCerta")){
-        acertos++;
-    }
-    
-}
-
-function scrollar(){
-    let proximo = perguntaDaVez.parentNode.querySelector(".naoFoi");
-    proximo.scrollIntoView();
-
-    if(proximo == null){
-        console.log("acabou");
-    }
 }
 
 
