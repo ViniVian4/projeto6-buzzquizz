@@ -209,4 +209,18 @@ body > div > div {
     .no-quizzes {
         width: 340px;
     }
+
+    .quest-basico {
+        width: 375px;
+        height: 256px;
+    }
+
+    .quest-basico > input {
+        width: 341px;
+        height: 46px;
+    }
+
+    .botao-para-perguntas {
+        width: 325px;
+    }
 }
