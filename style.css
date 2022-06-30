@@ -150,6 +150,85 @@ body > div > div {
     color: #FFFFFF;
 }
 
+.banner{
+    margin-top: 0;
+    width: 100%;
+    height: 227px;
+    position: relative;
+}
+.bannerFundo img{
+    filter: opacity(0.4);
+    max-height: 227px; 
+    width: 100%;
+}
+
+.banner h1{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    color: white;
+    font-size: 30px;
+    font-weight: 400;
+    margin-top: -15px;
+    margin-left: -200px;
+}
+.bannerFundo{
+    background-color: black;
+
+}
+
+
+.todasOpcoes{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+ 
+}
+.containerPerguntas{
+    width: 759px;
+    height: 676px;
+    padding: 40px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+    background-color: white;
+    margin: 20px auto;
+}
+
+.containerPerguntas h1{ 
+    height: 130px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #434CA0;
+    color: white;
+}
+.containerOpcoes{
+    margin-top: 20px;
+}
+.containerOpcoes h2{
+    font-size: 20px;
+    font-weight: 700;
+    margin-top: 10px;
+}
+.containerOpcoes img{
+    width: 330px;
+    height: 175.5px;
+}
+.tela.backgroundcinza{
+    background-color: #fafafa;
+}
+
+.respostaErrada{
+    filter: opacity(0.2);
+}
+h2.respostaErrada{
+    color: red;;
+    filter: none;
+}
+.respostaCerta{
+    color: green;
+}
+
+
 @media (max-width: 1100px) {
     .container-quizzes {
         width: 340px;
@@ -157,5 +236,18 @@ body > div > div {
 
     .no-quizzes {
         width: 340px;
+    }
+
+    body > div:first-child{
+        width: 100%;
+    }
+    .banner h1{
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        color: white;
+        font-size: 25px;
+        font-weight: 400;
+        margin-left: -150px;
     }
 }

@@ -1,6 +1,9 @@
 GeraTela1();
 
+
+
 function GeraTela1 () {
+
     document.querySelector(".tela").innerHTML = 
     `<div class="quizzes-do-usuario"></div>
 
@@ -49,3 +52,102 @@ function GeraSemQuizz () {
         <button onclick="GerarTela3()">Criar Quizz</button>
     </div>`;
 }
+
+// TELA 2
+const tela = document.querySelector(".tela");
+let id = 1;
+function GeraTela2(id){
+
+    tela.innerHTML = "";
+
+    let promisseEntrarPerguntas = axios.get(`https://mock-api.driven.com.br/api/v4/buzzquizz/quizzes/${id}`);
+    promisseEntrarPerguntas.then(geraTudo2);
+
+}
+function geraTudo2(resposta){
+    geraBanner(resposta.data.image,resposta.data.title);
+    geraPerguntas(resposta.data.questions);
+    console.log(resposta.data);
+
+}
+
+function geraBanner(imagem,titulo){
+
+    tela.innerHTML += ` 
+    
+    <div class="banner ">
+    <div class="bannerFundo">
+    <img src="${imagem}">
+  </div>
+    <h1> ${titulo}</h1>
+  </div>`
+         
+}
+
+let arrayRespostas = [],arrayRespostasEmbaralhado, espacoRespostas, ul;
+function geraPerguntas(perguntas) {
+  for (let i = 0; i < perguntas.length; i++) {
+
+    tela.innerHTML += ` 
+    
+    <div class="containerPerguntas" >
+    <h1  style="background-color:${perguntas[i].color}">> ${perguntas[i].title}</h1>
+    <ul class="todasOpcoes"></ul>
+    </div>
+    `
+    console.log(perguntas);
+    arrayRespostas = [];
+    arrayRespostas.push(perguntas[i].answers);
+    arrayRespostasEmbaralhado = arrayRespostas[0].sort(comparador);
+
+    ul = document.querySelectorAll("ul");
+
+    for (let i=0; i< arrayRespostasEmbaralhado.length; i++){
+        ul[ul.length-1].innerHTML += ` 
+
+        <li class="containerOpcoes">
+        <img src="${arrayRespostasEmbaralhado[i].image}">
+        <h2>${arrayRespostasEmbaralhado[i].text}</h2>
+      </li>
+    
+     `;
+    }
+    
+  }
+}
+
+function comparador() { 
+	return Math.random() - 0.5; 
+}
+
+function mensagemSucesso(){
+    console.log("sucesso");
+}
+
+// function confereResposta(){
+
+//     // confere se é resposta certao
+//     // gera respostaCerta
+//     // else respostaErrada
+// }
+
+// function respostaCerta(elemento){
+
+//     elemento.classList.add("respostaCerta");
+//     elemento.parentNode;
+//     // imagem permanece
+//     // nome verde
+//     // restante nome vermelho cinza
+
+// }
+
+// function respostaErrada(){
+
+//     // todas outras cinza
+//     // verifica a correta e nome verde
+//     // restante nome vermelho
+
+// }
+
+
+
