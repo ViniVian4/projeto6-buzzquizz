@@ -3,8 +3,7 @@ let urlImagem = "";
 let qntdPerguntas = 0;
 let qntdNiveis = 0;
 
-//GeraTela1();
-GeraTela2();
+GeraTela1();
 
 function GeraTela1 () {
     document.querySelector(".tela").innerHTML = 
@@ -56,7 +55,7 @@ function GeraSemQuizz () {
     </div>`;
 }
 
-function GeraTela2 () {
+function GerarTela3 () {
     document.querySelector(".tela").innerHTML = 
     `<div><h1>Comece pelo começo</h1></div>
     <div class="quest-basico">
