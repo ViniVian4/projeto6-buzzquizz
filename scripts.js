@@ -1,4 +1,10 @@
-GeraTela1();
+let titulo = "";
+let urlImagem = "";
+let qntdPerguntas = 0;
+let qntdNiveis = 0;
+
+//GeraTela1();
+GeraTela2();
 
 function GeraTela1 () {
     document.querySelector(".tela").innerHTML = 
@@ -48,4 +54,56 @@ function GeraSemQuizz () {
         <p>Você ainda não criou nenhum quiz :(</p>
         <button onclick="GerarTela3()">Criar Quizz</button>
     </div>`;
+}
+
+function GeraTela2 () {
+    document.querySelector(".tela").innerHTML = 
+    `<div><h1>Comece pelo começo</h1></div>
+    <div class="quest-basico">
+      <input type="text" placeholder="Título do seu quizz">
+      <input type="text" placeholder="URL da imagem do seu quizz">
+      <input type="text" placeholder="Quantidade de perguntas do quizz">
+      <input type="text" placeholder="Quantidade de níveis do quizz">
+    </div>
+    <div>
+      <button class="botao-para-perguntas" onclick="GeraTelaPerguntas()">
+        Prosseguir pra criar perguntas
+      </button>
+    </div>`;
+}
+
+function GeraTelaPerguntas (){
+    titulo = GetResposta(0);
+    urlImagem = GetResposta(1);
+    qntdPerguntas = Number(GetResposta(2));
+    qntdNiveis = Number(GetResposta(3));
+
+    const alerta = VerificaValidadeTelaComeco();
+    if (alerta)
+        alert("Algo deu errado");
+    else
+        ImprimeTelaPerguntas();
+}
+
+function GetResposta (indice){
+    let questionario = document.querySelector(".quest-basico");
+    questionario = questionario.querySelectorAll("input");
+    const resposta = String(questionario[indice].value);
+    return resposta;
+}
+
+function VerificaValidadeTelaComeco () {
+    if (titulo.length < 20 || titulo.length > 65)
+        return true;
+    try{
+        let url = new URL(urlImagem)
+    } catch(err){
+        return true;
+    }
+    if (qntdPerguntas < 3)
+        return true;
+    if (qntdNiveis < 2)
+        return true;
+    
+    return false;    
 }
