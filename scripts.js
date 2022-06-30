@@ -3,15 +3,17 @@ let urlImagem = "";
 let qntdPerguntas = 0;
 let qntdNiveis = 0;
 
-GeraTela1();
 const tela = document.querySelector(".tela");
-// GeraTela2(1);
+GeraTela1();
 
+// GeraTela2(1);
 
 function GeraTela1 () {
 
-    document.querySelector(".tela").innerHTML = 
+    tela.innerHTML = 
     `<div class="quizzes-do-usuario"></div>
+    <br>
+    <br>
 
     <div>
       <div class="container-quizzes">
@@ -62,6 +64,7 @@ function GeraSemQuizz () {
 // TELA 2
 
 
+let id = 1;
 function GeraTela2(id){
 
     tela.innerHTML = "";
@@ -181,14 +184,21 @@ function scrollar(){
 
 // TELA 3
 function GerarTela3 () {
-    document.querySelector(".tela").innerHTML = 
-    `<div><h1>Comece pelo começo</h1></div>
+    tela.innerHTML = 
+    `<br>
+    <br>
+    
+    <div><h1>Comece pelo começo</h1></div>
+    <br>
+    <br>
     <div class="quest-basico">
       <input type="text" placeholder="Título do seu quizz">
       <input type="text" placeholder="URL da imagem do seu quizz">
       <input type="text" placeholder="Quantidade de perguntas do quizz">
       <input type="text" placeholder="Quantidade de níveis do quizz">
     </div>
+    <br>
+    <br>
     <div>
       <button class="botao-para-perguntas" onclick="GeraTelaPerguntas()">
         Prosseguir pra criar perguntas
