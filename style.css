@@ -20,18 +20,27 @@ body > div {
 
 body > div:first-child {       
     height: 70px;
+    width: 100%;
+
+    position: fixed;
+    z-index: 5;
 
     font-size: 37px;
     font-weight: bold;
     color: #FFFFFF;
 
-    box-shadow: 0 0 5px 5px rgb(194, 188, 188);
+    box-shadow: 0 0 5px 5px rgba(61, 61, 61, 0.5);
 
     background-color: #EC362D;
 }
 
-body > div > div {
-    margin-top: 80px;
+.tela {
+    padding-top: 70px;
+    padding-bottom: 100px;
+}
+
+.quizzes-do-usuario {
+    margin-top: 50px;
 }
 
 .container-quizzes {
@@ -152,7 +161,6 @@ body > div > div {
 }
 
 .banner{
-    margin-top: 0;
     width: 100%;
     height: 227px;
     position: relative;
@@ -232,15 +240,23 @@ h2.respostaErrada{
 .quest-basico {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: space-evenly;
+    justify-content: space-around;
 
-    height: 256px;
+    box-sizing: initial;
+
     width: 600px;
+
+    padding-top: 20px;
+    padding-left: 35px;
+    padding-bottom: 5px;
 
     box-shadow: 0 0 5px 1px rgb(236, 232, 232);
 
     background-color: #FFFFFF;
+}
+
+.quest-basico > h1 {
+    margin-bottom: 10px;
 }
 
 .quest-basico > input {
@@ -248,11 +264,12 @@ h2.respostaErrada{
     height: 46px;
 
     padding-left: 10px;
+    margin-bottom: 15px;
 
     outline: none;
 
     border: 1px solid #D1D1D1;
-    border-radius: 10px;
+    border-radius: 5px;
 
     font-size: 19px;
 }
@@ -291,6 +308,7 @@ h2.respostaErrada{
     body > div:first-child{
         width: 100%;
     }
+    
     .banner h1{
         position: absolute;
         top: 50%;
@@ -299,6 +317,8 @@ h2.respostaErrada{
         font-size: 25px;
         font-weight: 400;
         margin-left: -150px;
+    }
+
     .quest-basico {
         width: 375px;
         height: 256px;
