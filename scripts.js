@@ -8,7 +8,8 @@ let prototipoQuizzCriado = {
     questions: [],
     levels: []
 };
-//GeraTela1();
+let idQuizzCriado = 0;
+GeraTela1();
 
 // GeraTela2(1);
 
@@ -413,4 +414,19 @@ function GeraTelaSucesso () {
     <button class="botao-sucesso" onclick="GeraTela2(${idQuizzCriado})">Acessar quizz</button>
     <button class="botao-sucesso home" onclick="GeraTela1()">Voltar para Home</button>
     `;
+}
+
+function ArmazenaQuizz () {
+    const promessa = axios.post("https://mock-api.driven.com.br/api/v4/buzzquizz/quizzes", prototipoQuizzCriado);
+    idQuizzCriado = promessa.data.id;
+
+    const dados = localStorage.getItem("lista de ids");
+    let arrayId = [];
+    if (dados)
+        arrayId = JSON.parse(dados);
+    
+    arrayId.push(idQuizzCriado);
+    const newDados = JSON.stringify(arrayId);
+
+    localStorage.setItem("lista de ids", newDados);
 }
