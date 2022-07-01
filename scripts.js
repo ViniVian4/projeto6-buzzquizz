@@ -8,7 +8,7 @@ let prototipoQuizzCriado = {
     questions: [],
     levels: []
 };
-GeraTela1();
+//GeraTela1();
 
 // GeraTela2(1);
 
@@ -400,4 +400,17 @@ function InsereAnswers (indice) {
             });
     
     return r;
+}
+
+function GeraTelaSucesso () {
+    tela.innerHTML = `
+    <br>
+    <br>
+    <br>
+    <br>
+    <h1>Seu quizz está pronto</h1>
+    <div class="quizz sucesso" onclick="GeraTela2(${idQuizzCriado})"><img src="${prototipoQuizzCriado.image}" alt=""><div><h2>${prototipoQuizzCriado.title}</h2></div></div>
+    <button class="botao-sucesso" onclick="GeraTela2(${idQuizzCriado})">Acessar quizz</button>
+    <button class="botao-sucesso home" onclick="GeraTela1()">Voltar para Home</button>
+    `;
 }

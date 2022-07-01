@@ -160,6 +160,20 @@ body > div:first-child {
     color: #FFFFFF;
 }
 
+.sucesso {
+    margin-top: 50px;
+    margin-bottom: 50px;
+}
+
+.sucesso img {
+    width: 500px;
+    height: 266px;
+}
+
+.sucesso h2 {
+    font-size: 23px;
+}
+
 .banner{
     width: 100%;
     height: 227px;
@@ -318,6 +332,26 @@ body > div:first-child {
     cursor: pointer;
 }
 
+.botao-sucesso {
+    width: 221px;
+    height: 44px;
+
+    border: none;
+    border-radius: 15px;
+
+    margin-bottom: 10px;
+
+    font-size: 21px;
+
+    background-color: #EC362D;
+    color: #FFF5F4;
+}
+
+.home {
+    background-color: #fafafa;
+    color: #818181;
+}
+
 .none{
     display: none;
 }
@@ -336,6 +370,11 @@ body > div:first-child {
 
     body > div:first-child{
         width: 100%;
+    }
+
+    .sucesso img {
+        width: 340px;
+        height: 181px;
     }
     
     .banner h1{
