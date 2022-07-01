@@ -1,8 +1,12 @@
-let titulo = "";
-let urlImagem = "";
+const tela = document.querySelector(".tela");
 let qntdPerguntas = 0;
 let qntdNiveis = 0;
-const tela = document.querySelector(".tela");
+let existeResposta = [false, false, false];
+let prototipoQuizzCriado = {
+    title: "",
+    image: "",
+    questions: []
+};
 
 GeraTela1();
 
@@ -168,10 +172,12 @@ function GerarTela3 () {
     <br>
     <br>
     <div class="quest-basico">
-      <input type="text" placeholder="Título do seu quizz">
-      <input type="text" placeholder="URL da imagem do seu quizz">
-      <input type="text" placeholder="Quantidade de perguntas do quizz">
-      <input type="text" placeholder="Quantidade de níveis do quizz">
+    <div>
+        <input type="text" placeholder="Título do seu quizz">
+        <input type="text" placeholder="URL da imagem do seu quizz">
+        <input type="text" placeholder="Quantidade de perguntas do quizz">
+        <input type="text" placeholder="Quantidade de níveis do quizz">
+    </div>
     </div>
     <br>
     <br>
@@ -183,10 +189,10 @@ function GerarTela3 () {
 }
 
 function GeraTelaPerguntas (){
-    titulo = GetResposta(0);
-    urlImagem = GetResposta(1);
-    qntdPerguntas = Number(GetResposta(2));
-    qntdNiveis = Number(GetResposta(3));
+    prototipoQuizzCriado.title = GetResposta(0, 0);
+    prototipoQuizzCriado.image = GetResposta(0, 1);
+    qntdPerguntas = Number(GetResposta(0, 2));
+    qntdNiveis = Number(GetResposta(0, 3));
 
     const alerta = VerificaValidadeTelaComeco();
     if (alerta)
@@ -195,18 +201,21 @@ function GeraTelaPerguntas (){
         ImprimeTelaPerguntas();
 }
 
-function GetResposta (indice){
-    let questionario = document.querySelector(".quest-basico");
+function GetResposta (indiceQuest, indiceInput){
+    const questionarioAll = document.querySelectorAll(".quest-basico");
+
+    let questionario = questionarioAll[indiceQuest];
     questionario = questionario.querySelectorAll("input");
-    const resposta = String(questionario[indice].value);
+
+    const resposta = String(questionario[indiceInput].value);
     return resposta;
 }
 
 function VerificaValidadeTelaComeco () {
-    if (titulo.length < 20 || titulo.length > 65)
+    if (prototipoQuizzCriado.title.length < 20 || prototipoQuizzCriado.title.length > 65)
         return true;
     try{
-        let url = new URL(urlImagem)
+        let url = new URL(prototipoQuizzCriado.image)
     } catch(err){
         return true;
     }
@@ -216,4 +225,153 @@ function VerificaValidadeTelaComeco () {
         return true;
     
     return false;    
+}
+
+function ImprimeTelaPerguntas () {
+    tela.innerHTML = `
+    <br>
+    <br>
+
+    <div><h1>Crie suas perguntas</h1></div>
+    `;
+
+    ImprimeQuestBasico();
+    
+    tela.innerHTML += `
+    <br>
+    <br>
+    <div>
+      <button class="botao-para-perguntas" onclick="GeraTelaNiveis()">
+        Prosseguir pra criar níveis
+      </button>
+    </div>`;
+}
+
+function ImprimeQuestBasico (){
+    for (let i = 0; i < qntdPerguntas; i++){
+        tela.innerHTML += `
+            <br>
+            <br>
+            
+            <div>
+                <div class="quest-basico">
+                    <div class="collapsible" onclick="Collapse(this)"><h1>Pergunta ${i+1}</h1> <ion-icon name="create-outline"></ion-icon></div>
+                    <div class="conteudoPerguntas"> 
+                        <input type="text" placeholder="Texto da pergunta">
+                        <input type="text" placeholder="Cor de fundo da pergunta">
+
+                        <br>
+
+                        <h1>Resposta correta</h1>
+                        <input type="text" placeholder="Resposta correta">
+                        <input type="text" placeholder="URL da imagem">
+
+                        <br>
+
+                        <h1>Respostas Incorretas</h1>
+                        <input type="text" placeholder="Resposta incorreta 1">
+                        <input type="text" placeholder="URL da imagem 1">
+
+                        <br>
+
+                        <input type="text" placeholder="Resposta incorreta 2">
+                        <input type="text" placeholder="URL da imagem 2">
+
+                        <br>
+
+                        <input type="text" placeholder="Resposta incorreta 3">
+                        <input type="text" placeholder="URL da imagem 3">
+                    </div>
+                </div>
+            </div>`;
+    }
+}
+
+function Collapse (doc) {
+    let conteudo = doc.nextElementSibling;
+    
+    if (conteudo.style.maxHeight)
+        conteudo.style.maxHeight = null;
+    else
+        conteudo.style.maxHeight = conteudo.scrollHeight + "px";
+}
+
+function GeraTelaNiveis (){
+    prototipoQuizzCriado.questions = [];
+    
+    for (let i = 0; i < qntdPerguntas; i++){
+        if (!VerificaValidadePerguntas(i)){
+            alert("Algo deu errado");
+            existeResposta = [false, false, false];
+            return;
+        }
+
+        prototipoQuizzCriado.questions.push({
+            title: GetResposta(i, 0),
+            color: GetResposta(i, 1),
+            answers: InsereAnswers(i)
+        })
+
+        existeResposta = [false, false, false];
+    }
+}
+
+function VerificaValidadePerguntas (indice) {
+    if (GetResposta(indice, 0).length >= 20)
+        return true;
+    
+    if (GetResposta(indice, 1)[0] === "#" 
+    && VerificaHexadecimal(GetResposta(indice, 1).slice(1, GetResposta(indice, 1).length)))
+        return true;
+
+    if (GetResposta(indice, 2).length > 0)
+        return true
+
+    if (GetResposta(indice, i+1) !== ""){
+        try{
+            let url = new URL(GetResposta(indice, 3))
+        } catch(err){
+            return true;
+        }
+    }
+    
+    for (let i = 4; i < 9; i+=2){
+        if (GetResposta(indice, i).length > 0)
+            existeResposta[(i/2)-2] = true;
+
+        if (GetResposta(indice, i+1) !== ""){
+            try{
+                let url = new URL(GetResposta(indice, 3))
+            } catch(err){
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+function VerificaHexadecimal(string) {
+
+    return Boolean(string.match(/^0x[0-9a-f]+$/i));
+  }
+
+function InsereAnswers (indice) {
+    let r = [];
+    let qntdRespostas = 0;
+
+    r.push({
+        text: GetResposta(indice, 2),
+        image: GetResposta(indice, 3),
+        isCorrectAnswer: true
+    });
+
+    for (let i = 0; i < 3; i++)
+        if (existeResposta)
+            r.push({
+                text: GetResposta(indice, (2*(i+2))),
+                image: GetResposta(indice, (2*(i+2) + 1)),
+                isCorrectAnswer: false
+            });
+    
+    return r;
 }
