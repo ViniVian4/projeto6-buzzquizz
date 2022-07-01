@@ -31,6 +31,7 @@ function GeraTela1 () {
     PostaTodosOsQuizzes ();
 }
 
+
 function PostaTodosOsQuizzes () {
     const promise = axios.get("https://mock-api.driven.com.br/api/v4/buzzquizz/quizzes");
     promise.then(EscreveTodosOsQuizzes);
@@ -38,6 +39,7 @@ function PostaTodosOsQuizzes () {
 
 function EscreveTodosOsQuizzes (promessa) {
     const svTodosOsQuizzes = promessa.data;
+ 
 
     for (let i = 0; i < svTodosOsQuizzes.length; i++)
         document.querySelector(".todos").innerHTML += `<div class="quizz" onclick="GeraTela2(${svTodosOsQuizzes[i].id})"><img src="${svTodosOsQuizzes[i].image}" alt=""><div><h2>${svTodosOsQuizzes[i].title}</h2></div></div>`;
@@ -96,9 +98,10 @@ function GeraSemQuizz () {
 // TELA 2
 
 
-let id = 1;
+let idDaVez;
 function GeraTela2(id){
 
+    idDaVez = id;
     tela.innerHTML = "";
 
     let promisseEntrarPerguntas = axios.get(`https://mock-api.driven.com.br/api/v4/buzzquizz/quizzes/${id}`);
@@ -108,7 +111,7 @@ function GeraTela2(id){
 function geraTudo2(resposta){
     geraBanner(resposta.data.image,resposta.data.title);
     geraPerguntas(resposta.data.questions);
-
+    geraTelaNiveis(resposta.data.levels);
 }
 
 function geraBanner(imagem,titulo){
@@ -123,10 +126,11 @@ function geraBanner(imagem,titulo){
   </div>`
          
 }
-
+let qtdDePerguntas;
 let arrayRespostas = [],arrayRespostasEmbaralhado, espacoRespostas, ul;
 function geraPerguntas(perguntas) {
-  for (let i = 0; i < perguntas.length; i++) {
+    qtdDePerguntas = perguntas.length;
+  for (let i = 0; i < qtdDePerguntas; i++) {
 
     tela.innerHTML += ` 
     
@@ -172,10 +176,11 @@ function confereResposta(elemento){
     perguntaDaVez.classList.remove("naoFoi");
 
      if (perguntaDaVez.querySelector(".selecionado")){
-        console.log("ja foi escolhido");
+
         return;
      }
     selecionado(elemento);
+    
     setTimeout(scrollar,2000);
      
    
@@ -201,14 +206,68 @@ function selecionado(elemento){
         acertos++;
     }
     
+    apareceTelaNiveis();
 }
 
-function scrollar(){
-    let proximo = perguntaDaVez.parentNode.querySelector(".naoFoi");
-    proximo.scrollIntoView();
+function scrollar(id){
 
-    if(proximo == null){
-        console.log("acabou");
+    if (tela.querySelector(".naoFoi")){
+        tela.querySelector(".naoFoi").scrollIntoView();
+    }
+
+}
+let gabaritoNiveis;
+function geraTelaNiveis(niveis){
+
+    tela.innerHTML += 
+        `
+        <div class="niveis">
+        <div class="containerNiveis naoFoi none">
+    
+        <h1></h1>
+        <div class="conteudoNiveis">
+          <div class="imgNiveis"><img src=""></div>
+          <div><h2></h2> </div>
+        </div>
+        </div>
+    
+      <div class="menuFinal">  
+        <button onclick="GeraTela2(${idDaVez})"> Reiniciar Quizz</button>
+        <div class="voltarHome" onclick="GeraTela1()">Voltar pra home</div>
+     
+      </div>
+      </div>
+        `
+    gabaritoNiveis = niveis;    
+    
+}
+
+function apareceTelaNiveis(){
+    
+
+    let divNiveis = document.querySelector(".containerNiveis");
+    let nivelTitulo = divNiveis.querySelector("h1"); 
+    let nivelImg = divNiveis.querySelector("img");
+    let nivelTexto = divNiveis.querySelector("h2");
+    
+    if((tela.querySelector(".naoFoi")) == divNiveis ){
+        let niveis = document.querySelector(".containerNiveis");
+        niveis.classList.remove("none");
+
+    let porcentagemAcertos = Math.round((acertos/qtdDePerguntas)*100);
+
+    for(let i = gabaritoNiveis.length-1; i>= 0; i--){
+
+        if (porcentagemAcertos > gabaritoNiveis[i].minValue){
+            nivelTitulo.innerHTML = `${porcentagemAcertos}% de acerto: ${gabaritoNiveis[i].title}`;
+            nivelImg.src = gabaritoNiveis[i].image;
+            nivelTexto.innerHTML = gabaritoNiveis[i].text;
+            acertos = 0;
+            return;
+        }
+    }
+  
+    
     }
 }
 
@@ -367,7 +426,7 @@ function GeraTelaNiveis (){
         existeResposta = [false, false, false];
     }
 
-    //ImprimeTelaNiveis()
+    // ImprimeTelaNiveis()
 }
 
 function VerificaValidadePerguntas (indice) {
