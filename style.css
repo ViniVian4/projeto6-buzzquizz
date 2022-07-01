@@ -399,4 +399,9 @@ body > div:first-child {
     .botao-para-perguntas {
         width: 325px;
     }
+
+    .botao-criar {
+        right: 0;
+        left: 185px;
+    }
 }

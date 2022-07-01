@@ -58,6 +58,33 @@ function VerificaQuizzesDoUsuario () {
         return false;
 }
 
+function GeraComQuizz () {
+    document.querySelector(".quizzes-do-usuario").innerHTML = 
+        `<div class="container-quizzes">
+            <div><h1>Seus quizzes <ion-icon name="add-circle" class="botao-criar" onclick="GerarTela3()"></ion-icon></h1></div>
+            <div class="quizzes usuario"></div>
+        </div>`;
+    
+    GeraQuizzDoUsuario();
+}
+
+function GeraQuizzDoUsuario (){
+    const dados = localStorage.getItem("lista de ids");
+    const ids = JSON.parse(dados);
+
+    for (let i = 0; i < ids.length; i++){
+        const promessa = axios.get(`https://mock-api.driven.com.br/api/v4/buzzquizz/quizzes/${ids[i]}`);
+        promessa.then(ImprimeQuizzUsuario);
+        promessa.catch(DeuRuim);
+    }
+    
+}
+
+function ImprimeQuizzUsuario (promessa) {
+    const qUsuario = promessa.data;
+    document.querySelector(".usuario").innerHTML = `<div class="quizz" onclick="GeraTela2(${qUsuario.id})"><img src="${qUsuario.image}" alt=""><div><h2>${qUsuario.title}</h2></div></div>`;    
+}
+
 function GeraSemQuizz () {
     document.querySelector(".quizzes-do-usuario").innerHTML =
     `<div class="no-quizzes">
@@ -418,6 +445,11 @@ function GeraTelaSucesso () {
 
 function ArmazenaQuizz () {
     const promessa = axios.post("https://mock-api.driven.com.br/api/v4/buzzquizz/quizzes", prototipoQuizzCriado);
+    promessa.then(Postou);
+    promessa.catch(DeuRuim);
+}
+
+function Postou (promessa) {
     idQuizzCriado = promessa.data.id;
 
     const dados = localStorage.getItem("lista de ids");
@@ -429,4 +461,8 @@ function ArmazenaQuizz () {
     const newDados = JSON.stringify(arrayId);
 
     localStorage.setItem("lista de ids", newDados);
+}
+
+function DeuRuim (promessa) {
+    console.log("Deu ruim, code: " + promessa.response.status);
 }
