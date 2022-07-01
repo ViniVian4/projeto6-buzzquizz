@@ -5,7 +5,8 @@ let existeResposta = [false, false, false];
 let prototipoQuizzCriado = {
     title: "",
     image: "",
-    questions: []
+    questions: [],
+    levels: []
 };
 GeraTela1();
 
@@ -337,6 +338,8 @@ function GeraTelaNiveis (){
 
         existeResposta = [false, false, false];
     }
+
+    //ImprimeTelaNiveis()
 }
 
 function VerificaValidadePerguntas (indice) {
