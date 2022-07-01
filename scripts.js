@@ -7,10 +7,9 @@ let prototipoQuizzCriado = {
     image: "",
     questions: []
 };
-
 GeraTela1();
 
-
+// GeraTela2(1);
 
 function GeraTela1 () {
 
@@ -66,6 +65,8 @@ function GeraSemQuizz () {
 }
 
 // TELA 2
+
+
 let id = 1;
 function GeraTela2(id){
 
@@ -78,7 +79,6 @@ function GeraTela2(id){
 function geraTudo2(resposta){
     geraBanner(resposta.data.image,resposta.data.title);
     geraPerguntas(resposta.data.questions);
-    console.log(resposta.data);
 
 }
 
@@ -101,12 +101,12 @@ function geraPerguntas(perguntas) {
 
     tela.innerHTML += ` 
     
-    <div class="containerPerguntas" >
+    <div class="containerPerguntas naoFoi" >
     <h1  style="background-color:${perguntas[i].color}">> ${perguntas[i].title}</h1>
+    <span class="id none">${i} </span> 
     <ul class="todasOpcoes"></ul>
     </div>
     `
-    console.log(perguntas);
     arrayRespostas = [];
     arrayRespostas.push(perguntas[i].answers);
     arrayRespostasEmbaralhado = arrayRespostas[0].sort(comparador);
@@ -116,9 +116,11 @@ function geraPerguntas(perguntas) {
     for (let i=0; i< arrayRespostasEmbaralhado.length; i++){
         ul[ul.length-1].innerHTML += ` 
 
-        <li class="containerOpcoes">
+        <li class="containerOpcoes" onclick="confereResposta(this)">
         <img src="${arrayRespostasEmbaralhado[i].image}">
         <h2>${arrayRespostasEmbaralhado[i].text}</h2>
+        <span class="none">${arrayRespostasEmbaralhado[i].isCorrectAnswer}</span>
+        
       </li>
     
      `;
@@ -131,34 +133,55 @@ function comparador() {
 	return Math.random() - 0.5; 
 }
 
-function mensagemSucesso(){
-    console.log("sucesso");
+// Interação pos clique
+let respostas, elementoEscolhido,perguntaDaVez;
+function confereResposta(elemento){
+
+    
+  
+    perguntaDaVez = elemento.parentNode.parentNode;
+    perguntaDaVez.classList.remove("naoFoi");
+
+     if (perguntaDaVez.querySelector(".selecionado")){
+        console.log("ja foi escolhido");
+        return;
+     }
+    selecionado(elemento);
+    setTimeout(scrollar,2000);
+     
+   
+}
+let verificandoResposta, acertos=0;
+function selecionado(elemento){
+    respostas = elemento.parentNode.querySelectorAll("li");
+    
+
+    for (let i=0;i<respostas.length;i++){
+        respostas[i].classList.add("naoSelecionado");
+        if (respostas[i].querySelector("span").innerHTML == "true"){
+            respostas[i].classList.add("respostaCerta");
+        } else {
+            respostas[i].classList.add("respostaErrada");
+        }
+    }
+    elemento.classList.remove("naoSelecionado");
+    elemento.classList.add("selecionado");
+    elementoEscolhido = elemento;
+
+    if (elemento.classList.contains("respostaCerta")){
+        acertos++;
+    }
+    
 }
 
-// function confereResposta(){
+function scrollar(){
+    let proximo = perguntaDaVez.parentNode.querySelector(".naoFoi");
+    proximo.scrollIntoView();
 
-//     // confere se é resposta certao
-//     // gera respostaCerta
-//     // else respostaErrada
-// }
-
-// function respostaCerta(elemento){
-
-//     elemento.classList.add("respostaCerta");
-//     elemento.parentNode;
-//     // imagem permanece
-//     // nome verde
-//     // restante nome vermelho cinza
-
-// }
-
-// function respostaErrada(){
-
-//     // todas outras cinza
-//     // verifica a correta e nome verde
-//     // restante nome vermelho
-
-// }
+    if(proximo == null){
+        console.log("acabou");
+    }
+}
 
 
 
