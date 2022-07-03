@@ -481,3 +481,9 @@ margin-top: 15px;
     .botao-para-perguntas {
         width: 325px;
     }
+
+    .botao-criar {
+        right: 0;
+        left: 185px;
+    }
+}
