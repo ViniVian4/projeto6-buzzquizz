@@ -7,11 +7,15 @@ let prototipoQuizzCriado = {
     image: "",
     questions: [],
     levels: []
-};
+}
+let tinhaZero = 0;;
 let idQuizzCriado = 0;
-GeraTela1();
+let idDaVez;
+let qtdDePerguntas;
+let svTodosOsQuizzes;
+let quizzesUsuario;
 
-// GeraTela2(1);
+GeraTela1();
 
 function GeraTela1 () {
 
@@ -26,9 +30,9 @@ function GeraTela1 () {
         <div class="quizzes todos"></div>   
       </div>
     </div>`;
-
-    GeraUsuario ();
     PostaTodosOsQuizzes ();
+    GeraUsuario ();
+    
 }
 
 
@@ -38,7 +42,7 @@ function PostaTodosOsQuizzes () {
 }
 
 function EscreveTodosOsQuizzes (promessa) {
-    const svTodosOsQuizzes = promessa.data;
+    svTodosOsQuizzes = promessa.data;
  
 
     for (let i = 0; i < svTodosOsQuizzes.length; i++)
@@ -54,8 +58,11 @@ function GeraUsuario () {
 }
 
 function VerificaQuizzesDoUsuario () {
-    if (localStorage.getItem("lista de ids"))
+    if (localStorage.getItem("lista de ids")){
+        dados = localStorage.getItem("lista de ids");
+        dadosArray = JSON.parse(dados);
         return true;
+    }
     else
         return false;
 }
@@ -68,10 +75,38 @@ function GeraSemQuizz () {
     </div>`;
 }
 
+function GeraComQuizz(){
+   
+    quizzesUsuario = document.querySelector(".quizzes-do-usuario");
+    quizzesUsuario.innerHTML = 
+    `
+    <div class ="container-quizzes"> 
+    <div class="tituloSeusQuizzes"> <h1>Seus Quizzes</h1> <ion-icon name="add-circle" onclick="GerarTela3()"></ion-icon> </div>
+    <div class ="seusQuizzes"> </div>
+    </div>
+    `
+
+    for (let i = 0; i<dadosArray.length; i++){
+
+        let promisseUsuario = axios.get(`https://mock-api.driven.com.br/api/v4/buzzquizz/quizzes/${dadosArray[i]}`);
+        promisseUsuario.then(escreveQuizzesUsuario);
+      
+    }
+}
+function escreveQuizzesUsuario(quiz){
+    console.log(quiz.data.id);
+    quizzesUsuario = document.querySelector(".seusQuizzes");
+
+    quizzesUsuario.innerHTML += `<div class="quizz" onclick="GeraTela2(${quiz.data.id})">
+    <image src="${quiz.data.image}" alt=""><div><h2>${quiz.data.title}</h2>
+    </div></div>`;
+}
+
 // TELA 2
 
 
-let idDaVez;
+
+// idDaVez =1;
 function GeraTela2(id){
 
     idDaVez = id;
@@ -99,7 +134,7 @@ function geraBanner(imagem,titulo){
   </div>`
          
 }
-let qtdDePerguntas;
+
 let arrayRespostas = [],arrayRespostasEmbaralhado, espacoRespostas, ul;
 function geraPerguntas(perguntas) {
     qtdDePerguntas = perguntas.length;
@@ -182,7 +217,7 @@ function selecionado(elemento){
     apareceTelaNiveis();
 }
 
-function scrollar(id){
+function scrollar(){
 
     if (tela.querySelector(".naoFoi")){
         tela.querySelector(".naoFoi").scrollIntoView();
@@ -399,8 +434,58 @@ function GeraTelaNiveis (){
         existeResposta = [false, false, false];
     }
 
-    // ImprimeTelaNiveis()
+    ImprimeTelaNiveis()
 }
+
+function ImprimeTelaNiveis(){
+   
+        tela.innerHTML = `
+        <br>
+        <br>
+    
+        <div><h1>Agora, decida os níveis!</h1></div>
+        `;
+    
+        imprimeNiveisBasico();
+        
+        tela.innerHTML += `
+        <br>
+        <br>
+        <div>
+          <button class="botao-para-perguntas" onclick="GeraTelaSucesso()">
+          Finalizar Quizz
+          </button>
+        </div>`;
+  ;
+    }
+
+
+function imprimeNiveisBasico(){
+    for (let i = 0; i <  qntdNiveis; i++){
+        tela.innerHTML += `
+        
+        <div>
+        <div class="quest-basico niveis">
+        <div class="collapsible" onclick="Collapse(this)"><h1>Nivel ${i+1}</h1> <ion-icon name="create-outline"></ion-icon></div>
+        <div class="conteudoPerguntas"> 
+            <input type="text" placeholder="Titulo do nível">
+            <input type="text" placeholder="% de acerto mínima">
+    
+            <br>
+    
+            <input type="text" placeholder="URL da imagem do nível">
+            <input type="text" placeholder="Descrição do nível">
+    
+            <br>
+    
+        </div>
+    </div>
+    </div>
+        `
+    }
+   
+}
+
 
 function VerificaValidadePerguntas (indice) {
     if (GetResposta(indice, 0).length >= 20)
@@ -436,6 +521,24 @@ function VerificaValidadePerguntas (indice) {
     return false;
 }
 
+function VerificaValidadeNiveis (indice) {
+    if (GetResposta(indice, 0).length >= 10)
+        return true;
+    
+    if (GetResposta(indice,1) < 100 && GetResposta(indice,1)>0){
+        return true;
+    }
+
+    if (GetResposta(indice, 2)[0] === "#" 
+    && VerificaHexadecimal(GetResposta(indice, 1).slice(1, GetResposta(indice, 1).length)))
+        return true;
+
+    if (GetResposta(indice, 3).length > 30)
+        return true
+
+    return false;
+}
+
 function VerificaHexadecimal(string) {
 
     return Boolean(string.match(/^0x[0-9a-f]+$/i));
@@ -462,7 +565,51 @@ function InsereAnswers (indice) {
     return r;
 }
 
-function GeraTelaSucesso () {
+function GeraTelaSucesso(){
+    prototipoQuizzCriado.levels = [];
+    
+    for (let i = 0; i < qntdNiveis; i++){
+        console.log(i);
+        if (!VerificaValidadeNiveis(i)){
+            alert("Algo deu errado");
+            existeResposta = [false, false, false];
+            return;
+        }
+
+        prototipoQuizzCriado.levels.push({
+            title: GetResposta(i, 0),
+            image: GetResposta(i, 2),
+            text: GetResposta(i,3),
+            minValue:GetResposta(i,1)
+        })
+    
+    }
+
+    if(tinhaZero == 0){
+        
+        for (let i =0; i< qntdNiveis;i++){
+            if (GetResposta(i,1) == 0){
+                tinhaZero =1;
+                return;             
+            } 
+        }
+    }
+    else if (tinhaZero == 1){
+            console.log("tinha um com minimo 0");
+            ArmazenaQuizz();
+        } else {
+            alert("É necessário um valor minimo de 0");
+            return;
+        }
+
+        existeResposta = [false, false, false];
+    
+
+    
+}
+
+function ImprimeTelaSucesso () {
+
     tela.innerHTML = `
     <br>
     <br>
@@ -477,7 +624,12 @@ function GeraTelaSucesso () {
 
 function ArmazenaQuizz () {
     const promessa = axios.post("https://mock-api.driven.com.br/api/v4/buzzquizz/quizzes", prototipoQuizzCriado);
-    idQuizzCriado = promessa.data.id;
+    promessa.then(pegarIdCriado);
+
+}
+function pegarIdCriado(resposta){
+    console.log("foi postado");
+    idQuizzCriado = resposta.data.id;
 
     const dados = localStorage.getItem("lista de ids");
     let arrayId = [];
@@ -488,4 +640,7 @@ function ArmazenaQuizz () {
     const newDados = JSON.stringify(arrayId);
 
     localStorage.setItem("lista de ids", newDados);
+
+    ImprimeTelaSucesso();
+
 }

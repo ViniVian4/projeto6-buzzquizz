@@ -133,7 +133,7 @@ body > div:first-child {
 .quizz img {
     width: 340px;
     height: 181px;
-
+    object-fit: cover;
     border-radius: 10px;
 
     background-image: linear-gradient(0deg, red, rgba(255,0,0,1));
@@ -168,6 +168,7 @@ body > div:first-child {
 .sucesso img {
     width: 500px;
     height: 266px;
+    object-fit: cover;
 }
 
 .sucesso h2 {
@@ -306,6 +307,7 @@ body > div:first-child {
 }
 
 .conteudoPerguntas {
+    min-width: 100%;
     max-height: 0;
     overflow: hidden;
     transition: max-height 0.2s ease-out;
@@ -313,6 +315,7 @@ body > div:first-child {
 
 .conteudoPerguntas h1 {
     margin-bottom: 10px;
+    right: 50%;
 }
 
 .botao-para-perguntas {
@@ -421,15 +424,31 @@ margin-top: 15px;
     align-items: center;
 
 }
+.quest-basico.niveis{
+    margin-top: 30px;
+}
+.seusQuizzes {
+    display: flex;
+}
+.tituloSeusQuizzes{
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+.tituloSeusQuizzes ion-icon{
+    font-size: 36px;
+    color: #EC362D;
+    margin-left: 10px;
+}
 
 @media (max-width: 1100px) {
     .container-quizzes {
-        width: 340px;
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
     }
 
-    .no-quizzes {
-        width: 340px;
-    }
+
 
     body > div:first-child{
         width: 100%;
@@ -462,4 +481,3 @@ margin-top: 15px;
     .botao-para-perguntas {
         width: 325px;
     }
-}
