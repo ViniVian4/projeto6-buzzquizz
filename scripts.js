@@ -8,7 +8,7 @@ let prototipoQuizzCriado = {
     questions: [],
     levels: []
 }
-let tinhaZero = 0;;
+let tinhaZero = 0;
 let idQuizzCriado = 0;
 let idDaVez;
 let qtdDePerguntas;
@@ -24,12 +24,12 @@ function GeraTela1 () {
     <br>
     <br>
 
-    <div>
+    
       <div class="container-quizzes">
-        <h1>Todos os Quizzes</h1>
+        <div><h1>Todos os Quizzes</h1><div>
         <div class="quizzes todos"></div>   
       </div>
-    </div>`;
+    `;
     PostaTodosOsQuizzes ();
     GeraUsuario ();
     
@@ -59,8 +59,6 @@ function GeraUsuario () {
 
 function VerificaQuizzesDoUsuario () {
     if (localStorage.getItem("lista de ids")){
-        dados = localStorage.getItem("lista de ids");
-        dadosArray = JSON.parse(dados);
         return true;
     }
     else
@@ -70,7 +68,7 @@ function VerificaQuizzesDoUsuario () {
 function GeraComQuizz () {
     document.querySelector(".quizzes-do-usuario").innerHTML = 
         `<div class="container-quizzes">
-            <div><h1>Seus quizzes <ion-icon name="add-circle" class="botao-criar" onclick="GerarTela3()"></ion-icon></h1></div>
+            <div class="header-usuario"><h1>Seus quizzes</h1> <ion-icon name="add-circle" onclick="GerarTela3()"></ion-icon></div>
             <div class="quizzes usuario"></div>
         </div>`;
     
@@ -91,7 +89,7 @@ function GeraQuizzDoUsuario (){
 
 function ImprimeQuizzUsuario (promessa) {
     const qUsuario = promessa.data;
-    document.querySelector(".usuario").innerHTML = `<div class="quizz" onclick="GeraTela2(${qUsuario.id})"><img src="${qUsuario.image}" alt=""><div><h2>${qUsuario.title}</h2></div></div>`;    
+    document.querySelector(".usuario").innerHTML += `<div class="quizz" onclick="GeraTela2(${qUsuario.id})"><img src="${qUsuario.image}" alt=""><div><h2>${qUsuario.title}</h2></div></div>`;    
 }
 
 function GeraSemQuizz () {
@@ -100,33 +98,6 @@ function GeraSemQuizz () {
         <p>Você ainda não criou nenhum quiz :(</p>
         <button onclick="GerarTela3()">Criar Quizz</button>
     </div>`;
-}
-
-function GeraComQuizz(){
-   
-    quizzesUsuario = document.querySelector(".quizzes-do-usuario");
-    quizzesUsuario.innerHTML = 
-    `
-    <div class ="container-quizzes"> 
-    <div class="tituloSeusQuizzes"> <h1>Seus Quizzes</h1> <ion-icon name="add-circle" onclick="GerarTela3()"></ion-icon> </div>
-    <div class ="seusQuizzes"> </div>
-    </div>
-    `
-
-    for (let i = 0; i<dadosArray.length; i++){
-
-        let promisseUsuario = axios.get(`https://mock-api.driven.com.br/api/v4/buzzquizz/quizzes/${dadosArray[i]}`);
-        promisseUsuario.then(escreveQuizzesUsuario);
-      
-    }
-}
-function escreveQuizzesUsuario(quiz){
-    console.log(quiz.data.id);
-    quizzesUsuario = document.querySelector(".seusQuizzes");
-
-    quizzesUsuario.innerHTML += `<div class="quizz" onclick="GeraTela2(${quiz.data.id})">
-    <image src="${quiz.data.image}" alt=""><div><h2>${quiz.data.title}</h2>
-    </div></div>`;
 }
 
 // TELA 2
@@ -404,7 +375,7 @@ function ImprimeQuestBasico (){
                     <div class="collapsible" onclick="Collapse(this)"><h1>Pergunta ${i+1}</h1> <ion-icon name="create-outline"></ion-icon></div>
                     <div class="conteudoPerguntas"> 
                         <input type="text" placeholder="Texto da pergunta">
-                        <input type="text" placeholder="Cor de fundo da pergunta">
+                        <input type="color" id="head" name="head" value="#e66465">
 
                         <br>
 
@@ -446,7 +417,7 @@ function GeraTelaNiveis (){
     prototipoQuizzCriado.questions = [];
     
     for (let i = 0; i < qntdPerguntas; i++){
-        if (!VerificaValidadePerguntas(i)){
+        if (VerificaValidadePerguntas(i)){
             alert("Algo deu errado");
             existeResposta = [false, false, false];
             return;
@@ -515,32 +486,34 @@ function imprimeNiveisBasico(){
 
 
 function VerificaValidadePerguntas (indice) {
-    if (GetResposta(indice, 0).length >= 20)
+    if (GetResposta(indice, 0).length < 20){
+        console.log("1");
         return true;
-    
-    if (GetResposta(indice, 1)[0] === "#" 
-    && VerificaHexadecimal(GetResposta(indice, 1).slice(1, GetResposta(indice, 1).length)))
-        return true;
+    }
 
-    if (GetResposta(indice, 2).length > 0)
+    if (GetResposta(indice, 2).length === 0)
         return true
 
-    if (GetResposta(indice, i+1) !== ""){
+    if (GetResposta(indice, 3) === ""){
         try{
             let url = new URL(GetResposta(indice, 3))
         } catch(err){
+            console.log("Url");
             return true;
         }
     }
     
     for (let i = 4; i < 9; i+=2){
-        if (GetResposta(indice, i).length > 0)
-            existeResposta[(i/2)-2] = true;
+        console.log(GetResposta(indice,i));
+        if (GetResposta(indice, i) !== ""){
+            existeResposta[((i/2)-2)] = true;
+        }
 
         if (GetResposta(indice, i+1) !== ""){
             try{
                 let url = new URL(GetResposta(indice, 3))
             } catch(err){
+                console.log("Url");
                 return true;
             }
         }
@@ -549,18 +522,23 @@ function VerificaValidadePerguntas (indice) {
 }
 
 function VerificaValidadeNiveis (indice) {
-    if (GetResposta(indice, 0).length >= 10)
+    if (!(GetResposta(indice, 0).length >= 10))
         return true;
     
-    if (GetResposta(indice,1) < 100 && GetResposta(indice,1)>0){
+    if (!(GetResposta(indice,1) < 100 && GetResposta(indice,1)>0)){
         return true;
     }
 
-    if (GetResposta(indice, 2)[0] === "#" 
-    && VerificaHexadecimal(GetResposta(indice, 1).slice(1, GetResposta(indice, 1).length)))
+    
+    try{
+        let url = new URL(GetResposta(indice, 2))
+    } catch(err){
+        console.log("Url");
         return true;
+    }
+    
 
-    if (GetResposta(indice, 3).length > 30)
+    if (!(GetResposta(indice, 3).length > 30))
         return true
 
     return false;
@@ -573,7 +551,6 @@ function VerificaHexadecimal(string) {
 
 function InsereAnswers (indice) {
     let r = [];
-    let qntdRespostas = 0;
 
     r.push({
         text: GetResposta(indice, 2),
@@ -581,13 +558,15 @@ function InsereAnswers (indice) {
         isCorrectAnswer: true
     });
 
-    for (let i = 0; i < 3; i++)
-        if (existeResposta)
+    for (let i = 0; i < 3; i++){
+        if (existeResposta[i])
             r.push({
                 text: GetResposta(indice, (2*(i+2))),
                 image: GetResposta(indice, (2*(i+2) + 1)),
                 isCorrectAnswer: false
             });
+        console.log(existeResposta);}
+        
     
     return r;
 }
@@ -597,7 +576,7 @@ function GeraTelaSucesso(){
     
     for (let i = 0; i < qntdNiveis; i++){
         console.log(i);
-        if (!VerificaValidadeNiveis(i)){
+        if (VerificaValidadeNiveis(i)){
             alert("Algo deu errado");
             existeResposta = [false, false, false];
             return;
@@ -630,23 +609,10 @@ function GeraTelaSucesso(){
         }
 
         existeResposta = [false, false, false];
+        ArmazenaQuizz();
     
 
     
-}
-
-function ImprimeTelaSucesso () {
-
-    tela.innerHTML = `
-    <br>
-    <br>
-    <br>
-    <br>
-    <h1>Seu quizz está pronto</h1>
-    <div class="quizz sucesso" onclick="GeraTela2(${idQuizzCriado})"><img src="${prototipoQuizzCriado.image}" alt=""><div><h2>${prototipoQuizzCriado.title}</h2></div></div>
-    <button class="botao-sucesso" onclick="GeraTela2(${idQuizzCriado})">Acessar quizz</button>
-    <button class="botao-sucesso home" onclick="GeraTela1()">Voltar para Home</button>
-    `;
 }
 
 function ArmazenaQuizz () {
@@ -671,3 +637,21 @@ function pegarIdCriado(resposta){
     ImprimeTelaSucesso();
 
 }
+
+function ImprimeTelaSucesso () {
+
+    tela.innerHTML = `
+    <br>
+    <br>
+    <br>
+    <br>
+    <h1>Seu quizz está pronto</h1>
+    <div class="quizz sucesso" onclick="GeraTela2(${idQuizzCriado})"><img src="${prototipoQuizzCriado.image}" alt=""><div><h2>${prototipoQuizzCriado.title}</h2></div></div>
+    <button class="botao-sucesso" onclick="GeraTela2(${idQuizzCriado})">Acessar quizz</button>
+    <button class="botao-sucesso home" onclick="GeraTela1()">Voltar para Home</button>
+    `;
+}
+
+function DeuRuim (promessa) {
+    console.log("Deu ruim, code: " + promessa.response.status);
+} 
