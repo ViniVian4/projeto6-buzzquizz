@@ -174,10 +174,6 @@ body > div:first-child {
     margin-bottom: 50px;
 }
 
-.sucesso img {
-    width: 500px;
-    height: 266px;
-}
 
 .sucesso h2 {
     font-size: 23px;
@@ -299,6 +295,9 @@ body > div:first-child {
     border-radius: 5px;
 
     font-size: 19px;
+}
+.quest-basico.niveis{
+    margin-top: 15px;
 }
 
 .quest-basico input::placeholder {

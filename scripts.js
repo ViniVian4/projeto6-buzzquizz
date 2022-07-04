@@ -487,7 +487,7 @@ function imprimeNiveisBasico(){
 
 function VerificaValidadePerguntas (indice) {
     if (GetResposta(indice, 0).length < 20){
-        console.log("1");
+        // console.log("1");
         return true;
     }
 
@@ -522,10 +522,12 @@ function VerificaValidadePerguntas (indice) {
 }
 
 function VerificaValidadeNiveis (indice) {
-    if (!(GetResposta(indice, 0).length >= 10))
-        return true;
+    if (!(GetResposta(indice, 0).length >= 10)){
+    console.log(0);    
+    return true;}
     
-    if (!(GetResposta(indice,1) < 100 && GetResposta(indice,1)>0)){
+    if (!(GetResposta(indice,1) < 100 && GetResposta(indice,1)>=0)){
+        console.log(1);
         return true;
     }
 
@@ -538,8 +540,11 @@ function VerificaValidadeNiveis (indice) {
     }
     
 
-    if (!(GetResposta(indice, 3).length > 30))
-        return true
+    if (!(GetResposta(indice, 3).length > 30)){
+        console.log(3);
+        return true;
+    }
+        
 
     return false;
 }
@@ -575,7 +580,7 @@ function GeraTelaSucesso(){
     prototipoQuizzCriado.levels = [];
     
     for (let i = 0; i < qntdNiveis; i++){
-        console.log(i);
+    
         if (VerificaValidadeNiveis(i)){
             alert("Algo deu errado");
             existeResposta = [false, false, false];
