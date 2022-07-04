@@ -15,6 +15,7 @@ let qtdDePerguntas;
 let svTodosOsQuizzes;
 let quizzesUsuario;
 
+let loading = document.querySelector(".loading");
 GeraTela1();
 
 function GeraTela1 () {
@@ -38,16 +39,18 @@ function GeraTela1 () {
 
 function PostaTodosOsQuizzes () {
     const promise = axios.get("https://mock-api.driven.com.br/api/v4/buzzquizz/quizzes");
+    loading.classList.remove("none");
     promise.then(EscreveTodosOsQuizzes);
 }
 
 function EscreveTodosOsQuizzes (promessa) {
+    
     svTodosOsQuizzes = promessa.data;
  
 
     for (let i = 0; i < svTodosOsQuizzes.length; i++)
         document.querySelector(".todos").innerHTML += `<div class="quizz" onclick="GeraTela2(${svTodosOsQuizzes[i].id})"><img src="${svTodosOsQuizzes[i].image}" alt=""><div><h2>${svTodosOsQuizzes[i].title}</h2></div></div>`;
-    
+        loading.classList.add("none");
 }
 
 function GeraUsuario () {
@@ -111,6 +114,7 @@ function GeraTela2(id){
     tela.innerHTML = "";
 
     let promisseEntrarPerguntas = axios.get(`https://mock-api.driven.com.br/api/v4/buzzquizz/quizzes/${id}`);
+    loading.classList.remove("none");
     promisseEntrarPerguntas.then(geraTudo2);
 
 }
@@ -118,6 +122,7 @@ function geraTudo2(resposta){
     geraBanner(resposta.data.image,resposta.data.title);
     geraPerguntas(resposta.data.questions);
     geraTelaNiveis(resposta.data.levels);
+    loading.classList.add("none");
 }
 
 function geraBanner(imagem,titulo){
@@ -622,6 +627,7 @@ function GeraTelaSucesso(){
 
 function ArmazenaQuizz () {
     const promessa = axios.post("https://mock-api.driven.com.br/api/v4/buzzquizz/quizzes", prototipoQuizzCriado);
+    loading.classList.remove("none");
     promessa.then(pegarIdCriado);
 
 }
@@ -638,7 +644,7 @@ function pegarIdCriado(resposta){
     const newDados = JSON.stringify(arrayId);
 
     localStorage.setItem("lista de ids", newDados);
-
+    loading.classList.add("none");
     ImprimeTelaSucesso();
 
 }
